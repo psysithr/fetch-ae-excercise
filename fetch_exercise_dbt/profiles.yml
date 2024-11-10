@@ -1,0 +1,13 @@
+fetch_exercise_dbt: 
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      user: jakobnicolasora
+      password: ''
+      port: 5432
+      dbname: jakobnicolasora
+      schema: public
+      threads: 1
+      connect_timeout: 30
