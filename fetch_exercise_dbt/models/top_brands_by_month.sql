@@ -1,3 +1,11 @@
+-- This model is used to answer questions about brand ranking
+
+-- Ideally we would use barcode to join brands_clean to items_purchased
+-- However, due to the data quality issues identified, we will attempt
+--      to use various keys to join the two models
+
+-- There are cases where the cpg id can be used to join the two models
+-- This can only be used as a key if it is unique in brands_clean
 with cpg as (
     select
         _id,
@@ -23,6 +31,7 @@ joinable_cpg_brand as (
         on (cpg::json ->> '$id')::json ->> '$oid' = cpg_id
 ),
 
+-- Similarly, we can only join using barcode as a key if it is unique in brands_clean
 joinable_barcode as (
     select
         barcode,
@@ -46,7 +55,6 @@ items_with_brand as (
         ip.*,
         b1.brand_code as b1_brand_code,
         b2.brand_code as b2_brand_code
-    -- , b3.name as b3_name
     from {{ ref('items_purchased') }} as ip
     left join joinable_barcode_brand as b1 on ip.barcode = b1.barcode
     left join
@@ -68,6 +76,7 @@ brand_metrics_by_month as (
     group by 1, 2
 ),
 
+-- Calclate monthly rankings based on number of receipts scanned
 receipts_scanned_ranked as (
     select
         *,
@@ -80,6 +89,7 @@ receipts_scanned_ranked as (
     where brand_code != 'no matching brand'
 ),
 
+-- Calclate monthly rankings based on number of avg spend
 avg_spend_ranked as (
     select
         *,
@@ -92,6 +102,7 @@ avg_spend_ranked as (
     where brand_code != 'no matching brand'
 ),
 
+-- Calclate monthly rankings based on total spend
 total_spend_ranked as (
     select
         *,
@@ -104,6 +115,7 @@ total_spend_ranked as (
     where brand_code != 'no matching brand'
 ),
 
+-- Calclate monthly rankings based on number of items purchased
 items_purchased_ranked as (
     select
         *,
@@ -116,6 +128,8 @@ items_purchased_ranked as (
     where brand_code != 'no matching brand'
 ),
 
+-- Join all ranking ctes together
+-- Limit to top 5 for each evaluation metric
 unioned_rankings as (
     select * from receipts_scanned_ranked where rank <= 5
     union

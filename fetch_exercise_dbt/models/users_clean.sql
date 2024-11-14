@@ -1,8 +1,8 @@
 select
     state,
     role,
-    active,
-    _id::json ->> '$oid' as _id,
+    active::boolean,
+    _id::json ->> '$oid' as user_id,
     to_timestamp(
         ("createdDate"::json ->> '$date')::double precision / 1000
     ) as created_date,

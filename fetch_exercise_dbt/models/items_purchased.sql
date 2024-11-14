@@ -7,6 +7,7 @@ select
         json_array_elements("rewardsReceiptItemList"::json) ->> 'itemPrice'
     )::decimal as item_price,
     _id::json ->> '$oid' as receipt_id,
+    "userId" as user_id,
     to_timestamp(
         ("purchaseDate"::json ->> '$date')::double precision / 1000
     ) as purchase_date,

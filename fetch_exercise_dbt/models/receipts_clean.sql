@@ -3,7 +3,7 @@ select
     "bonusPointsEarnedReason" as bonus_points_earned_reason,
     "pointsEarned"::decimal as points_earned,
     "purchasedItemCount"::decimal as purchased_item_count,
-    "rewardsReceiptItemList" as rewards_receipt_item_list,
+    -- "rewardsReceiptItemList" as rewards_receipt_item_list,
     "rewardsReceiptStatus" as rewards_receipt_status,
     "totalSpent"::decimal as total_spent,
     "userId" as user_id,
