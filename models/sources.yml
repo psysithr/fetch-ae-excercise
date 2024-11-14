@@ -1,0 +1,8 @@
+sources:
+  - name: raw_data
+    database: jakobnicolasora
+    schema: public
+    tables:
+      - name: users
+      - name: brands
+      - name: receipts
